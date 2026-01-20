@@ -1,0 +1,18 @@
+[project]
+name = "sk-service-worker"
+version = "0.1.0"
+description = "sk-service-worker"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "webtypy>=0.1.7",
+    "fastapi",
+    "markupsafe",
+    "jinja2",
+]
+
+[dependency-groups]
+dev = [
+    "workers-py",
+    "workers-runtime-sdk"
+]

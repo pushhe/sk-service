@@ -27,6 +27,12 @@ async def env(req: Request):
     return {"message": message}
 
 
+@app.post("/login")
+async def login(req: Request):
+    data = await req.json()
+    return {"received": data}
+
+
 class Default(WorkerEntrypoint):
     async def fetch(self, request):
         import asgi

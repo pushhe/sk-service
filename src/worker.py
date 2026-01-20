@@ -1,6 +1,7 @@
 import jinja2
 from fastapi import FastAPI, Request
 from workers import WorkerEntrypoint
+from schemas import LoginSchema
 
 environment = jinja2.Environment()
 template = environment.from_string("Hello, {{ name }}!")
@@ -28,9 +29,8 @@ async def env(req: Request):
 
 
 @app.post("/login")
-async def login(req: Request):
-    data = await req.json()
-    return {"received": data}
+async def login(req: LoginSchema):
+    return {"name": req.username, "password": req.password}
 
 
 class Default(WorkerEntrypoint):

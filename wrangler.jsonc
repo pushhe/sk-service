@@ -11,7 +11,8 @@
     "MESSAGE": "My env var"
   },
   "observability": {
-    "enabled": true
+    "enabled": true,
+    "head_sampling_rate": 1
   },
   "d1_databases": [
     {

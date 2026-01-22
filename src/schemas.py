@@ -6,6 +6,13 @@
 # Software: PyCharm
 from pydantic import BaseModel
 
+
 class LoginSchema(BaseModel):
     username: str
     password: str
+
+
+class BaseResponse(BaseModel):
+    state: str = 'ok'
+    message: str
+    data: dict = {}

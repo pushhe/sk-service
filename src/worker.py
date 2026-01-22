@@ -80,8 +80,9 @@ async def login(auth: AuthModel, request: Request) -> BaseResponse:
     if not user:
         return BaseResponse(state='error', message="用户名或密码错误")
 
+    user_data = user.to_py()
     # 传入从 env 获取的密钥生成 Token
-    token = create_access_token(data={"sub": user["username"], "id": user["id"]}, secret=jwt_secret)
+    token = create_access_token(data={"sub": user_data["username"], "id": user_data["id"]}, secret=jwt_secret)
 
     return BaseResponse(message="登录成功", data={"access_token": token, "token_type": "bearer"})
 

@@ -6,7 +6,7 @@
 # Software: PyCharm
 import hashlib
 from datetime import datetime, timedelta
-from jose import jwt
+import jwt
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
@@ -16,11 +16,9 @@ router = APIRouter(prefix="/user")
 
 def create_access_token(data: dict, secret: str):
     to_encode = data.copy()
-    # 设置过期时间
-    expire = datetime.utcnow() + timedelta(hours=24)  # 延长到24小时更方便开发
+    expire = datetime.utcnow() + timedelta(hours=24)
     to_encode.update({"exp": expire})
-    # 使用从 env 传入的 secret 进行签名
-    return jwt.encode(to_encode, secret, algorithm="HS256")
+    return jwt.encode(to_encode, secret, algorithm="HS256") # PyJWT 默认返回字符串
 
 
 def verify_token(token: str, secret: str):

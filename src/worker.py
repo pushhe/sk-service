@@ -2,6 +2,7 @@ import jinja2
 from fastapi import FastAPI, Request
 from workers import WorkerEntrypoint
 from schemas import LoginSchema
+from user import router
 
 environment = jinja2.Environment()
 template = environment.from_string("Hello, {{ name }}!")
@@ -38,3 +39,5 @@ class Default(WorkerEntrypoint):
         import asgi
 
         return await asgi.fetch(app, request.js_object, self.env)
+
+app.include_router(router, prefix="/api")

@@ -1,16 +1,23 @@
 {
-	"$schema": "node_modules/wrangler/config-schema.json",
-	"name": "sk-service",
-	"main": "src/worker.py",
-	"compatibility_date": "2025-11-02",
-	"compatibility_flags": [
-		"python_workers",
-		"python_dedicated_snapshot"
-	],
-	"vars": {
-		"MESSAGE": "My env var"
-	},
-	"observability": {
-		"enabled": true
-	}
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "sk-service",
+  "main": "src/worker.py",
+  "compatibility_date": "2025-11-02",
+  "compatibility_flags": [
+    "python_workers",
+    "python_dedicated_snapshot"
+  ],
+  "vars": {
+    "MESSAGE": "My env var"
+  },
+  "observability": {
+    "enabled": true
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "sk-db",
+      "database_id": "b9168220-9863-42d3-887a-1e91046beab0"
+    }
+  ]
 }

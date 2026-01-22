@@ -7,7 +7,7 @@
 from pydantic import BaseModel
 
 
-class LoginSchema(BaseModel):
+class AuthModel(BaseModel):
     username: str
     password: str
 

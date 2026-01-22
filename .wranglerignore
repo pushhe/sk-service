@@ -1,0 +1,7 @@
+.venv/
+.venv-workers/
+node_modules/
+tests/
+*.pyc
+__pycache__/
+.git/

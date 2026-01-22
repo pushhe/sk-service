@@ -50,7 +50,7 @@ def verify_token(token: str, secret: str):
 
 
 @app.post("/register")
-async def register(auth: AuthModel, env: Any) -> BaseResponse:
+async def register(auth: AuthModel, env: Any = '') -> BaseResponse:
     db = env.DB
     pwd_hash = hashlib.sha256(auth.password.encode()).hexdigest()
     try:

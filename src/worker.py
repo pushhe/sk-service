@@ -49,14 +49,8 @@ def verify_token(token: str, secret: str):
         raise HTTPException(status_code=401, detail="Token 无效或已过期")
 
 
-async def get_cloudflare_env():
-    # 在本地 Swagger 环境中，这里返回 None
-    # 在实际 Cloudflare 运行时，asgi-fetch 会覆盖这个值
-    return None
-
-
 @app.post("/register")
-async def register(auth: AuthModel, env: Any = Depends(get_cloudflare_env)) -> BaseResponse:
+async def register(auth: AuthModel, env: Any) -> BaseResponse:
     db = env.DB
     pwd_hash = hashlib.sha256(auth.password.encode()).hexdigest()
     try:
@@ -68,7 +62,7 @@ async def register(auth: AuthModel, env: Any = Depends(get_cloudflare_env)) -> B
 
 
 @app.post("/login")
-async def login(auth: AuthModel, env: Any = Depends(get_cloudflare_env)) -> BaseResponse:
+async def login(auth: AuthModel, env: Any) -> BaseResponse:
     db = env.DB
     # 从 Secret Store 中读取 SECRET_KEY
     # 注意：如果忘记设置，env.SECRET_KEY 会导致代码报错，这里可以做个保护

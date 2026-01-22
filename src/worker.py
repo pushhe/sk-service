@@ -1,5 +1,6 @@
 import jinja2
 from fastapi import FastAPI, HTTPException, Depends, Request
+from fastapi.responses import JSONResponse
 from workers import WorkerEntrypoint
 from schemas import AuthModel
 import hashlib
@@ -20,10 +21,9 @@ app = FastAPI()
 async def http_exception_handler(request: Request, exc: Exception):
     error_stack = traceback.format_exc()
     print(f"Global Exception Caught: {error_stack}")
-    return BaseResponse(
-        state="error",
-        message=f'服务器内部错误: {str(exc)}',
-        data={"detail": error_stack}
+    return JSONResponse(
+        status_code=500,
+        content={"state": "error", "message": str(exc), "detail": error_stack},
     )
 
 
@@ -49,7 +49,7 @@ def verify_token(token: str, secret: str):
         raise HTTPException(status_code=401, detail="Token 无效或已过期")
 
 
-def get_cloudflare_env():
+async def get_cloudflare_env():
     # 在本地 Swagger 环境中，这里返回 None
     # 在实际 Cloudflare 运行时，asgi-fetch 会覆盖这个值
     return None

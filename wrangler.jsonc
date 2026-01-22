@@ -19,5 +19,12 @@
       "database_name": "sk-db",
       "database_id": "b9168220-9863-42d3-887a-1e91046beab0"
     }
+  ],
+  "secrets_store_secrets": [
+    {
+      "binding": "SECRET_KEY",
+      "store_id": "96ad571360a040b98d7471fc69d85017",
+      "secret_name": "SECRET_KEY"
+    }
   ]
 }

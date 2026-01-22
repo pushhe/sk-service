@@ -40,4 +40,4 @@ class Default(WorkerEntrypoint):
 
         return await asgi.fetch(app, request.js_object, self.env)
 
-app.include_router(router, prefix="/api")
+app.include_router(router)

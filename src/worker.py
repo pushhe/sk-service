@@ -50,8 +50,8 @@ def verify_token(token: str, secret: str):
 
 
 @app.post("/register")
-async def register(auth: AuthModel, env: Any = '') -> BaseResponse:
-    db = env.DB
+async def register(auth: AuthModel, request: Request) -> BaseResponse:
+    db = request.scope.get("env").DB
     pwd_hash = hashlib.sha256(auth.password.encode()).hexdigest()
     try:
         await db.prepare("INSERT INTO users (username, password_hash) VALUES (?, ?)").bind(auth.username,
@@ -62,7 +62,8 @@ async def register(auth: AuthModel, env: Any = '') -> BaseResponse:
 
 
 @app.post("/login")
-async def login(auth: AuthModel, env: Any) -> BaseResponse:
+async def login(auth: AuthModel, request: Request) -> BaseResponse:
+    env = request.scope.get("env")
     db = env.DB
     # 从 Secret Store 中读取 SECRET_KEY
     # 注意：如果忘记设置，env.SECRET_KEY 会导致代码报错，这里可以做个保护

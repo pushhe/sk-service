@@ -10,7 +10,7 @@ import jwt
 from typing import Any
 from fastapi import APIRouter, HTTPException, Depends
 from pydantic import BaseModel
-from src.schemas import BaseResponse
+from schemas import BaseResponse
 
 ALGORITHM = "HS256"
 router = APIRouter(prefix="/user")

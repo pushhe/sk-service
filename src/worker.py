@@ -1,5 +1,5 @@
 import jinja2
-from fastapi import FastAPI, HTTPException, Depends
+from fastapi import FastAPI, HTTPException, Depends, Request
 from workers import WorkerEntrypoint
 from schemas import AuthModel
 import hashlib
@@ -7,20 +7,30 @@ from datetime import datetime, timedelta
 import jwt
 from typing import Any
 from schemas import BaseResponse
+import traceback
 
 environment = jinja2.Environment()
 template = environment.from_string("Hello, {{ name }}!")
+ALGORITHM = "HS256"
 
 app = FastAPI()
+
+
+@app.exception_handler(Exception)
+async def http_exception_handler(request: Request, exc: Exception):
+    error_stack = traceback.format_exc()
+    print(f"Global Exception Caught: {error_stack}")
+    return BaseResponse(
+        state="error",
+        message=f'服务器内部错误: {str(exc)}',
+        data={"detail": error_stack}
+    )
 
 
 @app.get("/")
 async def root():
     message = "This is an example of FastAPI with Jinja2 - go to /hi/<name> to see a template rendered"
     return {"message": message}
-
-
-ALGORITHM = "HS256"
 
 
 def create_access_token(data: dict, secret: str):

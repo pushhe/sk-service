@@ -26,6 +26,16 @@
       "binding": "SECRET_KEY",
       "store_id": "96ad571360a040b98d7471fc69d85017",
       "secret_name": "SECRET_KEY"
+    },
+    {
+      "binding": "DOC_USERNAME",
+      "store_id": "96ad571360a040b98d7471fc69d85017",
+      "secret_name": "DOC_USERNAME"
+    },
+    {
+      "binding": "DOC_PASSWORD",
+      "store_id": "96ad571360a040b98d7471fc69d85017",
+      "secret_name": "DOC_PASSWORD"
     }
   ]
 }

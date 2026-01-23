@@ -1,20 +1,22 @@
 import jinja2
-from fastapi import FastAPI, HTTPException, Depends, Request
+from fastapi import FastAPI, HTTPException, Depends, Request, status
 from fastapi.responses import JSONResponse
 from workers import WorkerEntrypoint
 from schemas import AuthModel
 import hashlib
 from datetime import datetime, timedelta
 import jwt
-from typing import Any
+from fastapi.openapi.docs import get_swagger_ui_html
+from fastapi.security import HTTPBasic, HTTPBasicCredentials
 from schemas import BaseResponse
 import traceback
 
 environment = jinja2.Environment()
 template = environment.from_string("Hello, {{ name }}!")
 ALGORITHM = "HS256"
+security = HTTPBasic()
 
-app = FastAPI()
+app = FastAPI(docs_url=None, redoc_url=None)
 
 
 @app.exception_handler(Exception)
@@ -25,6 +27,30 @@ async def http_exception_handler(request: Request, exc: Exception):
         status_code=500,
         content={"state": "error", "message": str(exc), "detail": error_stack},
     )
+
+
+def authenticate_docs(credentials: HTTPBasicCredentials = Depends(security), request: Request = None):
+    env = request.scope.get("env")
+    admin_user = getattr(env, "DOC_USERNAME", "")
+    admin_pass = getattr(env, "DOC_PASSWORD", "")
+
+    if credentials.username != admin_user or credentials.password != admin_pass:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect username or password",
+            headers={"WWW-Authenticate": "Basic"},
+        )
+
+
+@app.get("/docs", include_in_schema=False)
+async def overridden_swagger(username: str = Depends(authenticate_docs)):
+    return get_swagger_ui_html(openapi_url="/openapi.json", title="API Docs")
+
+
+@app.get("/openapi.json", include_in_schema=False)
+async def get_open_api_endpoint(username: str = Depends(authenticate_docs)):
+    from fastapi.openapi.utils import get_openapi
+    return get_openapi(title="FastAPI", version="1.0.0", routes=app.routes)
 
 
 @app.get("/")

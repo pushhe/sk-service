@@ -29,7 +29,7 @@ async def http_exception_handler(request: Request, exc: Exception):
     )
 
 
-def authenticate_docs(credentials: HTTPBasicCredentials = Depends(security), request: Request = None):
+async def authenticate_docs(credentials: HTTPBasicCredentials = Depends(security), request: Request = None):
     env = request.scope.get("env")
     admin_user = getattr(env, "DOC_USERNAME", "")
     admin_pass = getattr(env, "DOC_PASSWORD", "")

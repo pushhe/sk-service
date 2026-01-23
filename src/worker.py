@@ -94,7 +94,6 @@ async def login(auth: AuthModel, request: Request) -> BaseResponse:
     env = request.scope["env"]
     db = env.DB
     jwt_secret = await env.SECRET_KEY.get()
-    print(jwt_secret)
     if not jwt_secret:
         return BaseResponse(state='error', message="SECRET_KEY 未设置")
 

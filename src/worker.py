@@ -33,10 +33,10 @@ async def authenticate_docs(credentials: HTTPBasicCredentials = Depends(security
     env = request.scope["env"]
     admin_user = env.DOC_USER
     admin_pass = env.DOC_PASS
-    print(f"doc_user: {str(admin_user)}, doc_pass: {str(admin_pass)}")
+    print(f"doc_user: {admin_user}, doc_pass: {admin_pass}")
     print(f"admin_user: {credentials.username}, admin_pass: {credentials.password}")
 
-    if credentials.username != str(admin_user) or credentials.password != str(admin_pass):
+    if credentials.username != admin_user or credentials.password != admin_pass:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect username or password",
@@ -91,9 +91,10 @@ async def register(auth: AuthModel, request: Request) -> BaseResponse:
 
 @app.post("/login")
 async def login(auth: AuthModel, request: Request) -> BaseResponse:
-    env = request.scope.get("env")
+    env = request.scope["env"]
     db = env.DB
-    jwt_secret = getattr(env, "SECRET_KEY", None)
+    jwt_secret = await env.SECRET_KEY.get()
+    print(jwt_secret)
     if not jwt_secret:
         return BaseResponse(state='error', message="SECRET_KEY 未设置")
 
@@ -108,7 +109,7 @@ async def login(auth: AuthModel, request: Request) -> BaseResponse:
 
     user_data = user.to_py()
     # 传入从 env 获取的密钥生成 Token
-    token = create_access_token(data={"sub": user_data["username"], "id": user_data["id"]}, secret=str(jwt_secret))
+    token = create_access_token(data={"sub": user_data["username"], "id": user_data["id"]}, secret=jwt_secret)
 
     return BaseResponse(message="登录成功", data={"access_token": token, "token_type": "bearer"})
 

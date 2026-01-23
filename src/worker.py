@@ -33,7 +33,7 @@ async def authenticate_docs(credentials: HTTPBasicCredentials = Depends(security
     env = request.scope.get("env")
     admin_user = getattr(env, "DOC_USERNAME", "")
     admin_pass = getattr(env, "DOC_PASSWORD", "")
-    print(f"doc_user: {admin_user}, doc_pass: {admin_pass}")
+    print(f"doc_user: {str(admin_user)}, doc_pass: {str(admin_pass)}")
     print(f"admin_user: {credentials.username}, admin_pass: {credentials.password}")
 
     if credentials.username != str(admin_user) or credentials.password != str(admin_pass):

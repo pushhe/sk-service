@@ -30,9 +30,9 @@ async def http_exception_handler(request: Request, exc: Exception):
 
 
 async def authenticate_docs(credentials: HTTPBasicCredentials = Depends(security), request: Request = None):
-    env = request.scope.get("env")
-    admin_user = getattr(env, "DOC_USERNAME", "")
-    admin_pass = getattr(env, "DOC_PASSWORD", "")
+    env = request.scope["env"]
+    admin_user = env.DOC_USER
+    admin_pass = env.DOC_PASS
     print(f"doc_user: {str(admin_user)}, doc_pass: {str(admin_pass)}")
     print(f"admin_user: {credentials.username}, admin_pass: {credentials.password}")
 
@@ -93,8 +93,6 @@ async def register(auth: AuthModel, request: Request) -> BaseResponse:
 async def login(auth: AuthModel, request: Request) -> BaseResponse:
     env = request.scope.get("env")
     db = env.DB
-    # 从 Secret Store 中读取 SECRET_KEY
-    # 注意：如果忘记设置，env.SECRET_KEY 会导致代码报错，这里可以做个保护
     jwt_secret = getattr(env, "SECRET_KEY", None)
     if not jwt_secret:
         return BaseResponse(state='error', message="SECRET_KEY 未设置")
